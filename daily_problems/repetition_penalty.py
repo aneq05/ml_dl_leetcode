@@ -1,11 +1,16 @@
-def apply_repetition_penalty(logits, generated_ids, penalty):
-    if len(generated_ids) == 0:
-        return logits
-    else:
-        for index in set(generated_ids):
-            if 0 <= index < len(logits):
-                if logits[index] > 0:
-                    logits[index] /= penalty
-                else:
-                    logits[index] *= penalty
-    return logits
+def center_row(row):
+    observed = [x for x in row if x != 0]
+
+    if not observed:
+        return [0 for _ in row]
+
+    mean = sum(observed) / len(observed)
+
+    return [
+        0 if x == 0 else x - mean
+        for x in row
+    ]
+
+
+def mean_center_users(ratings):
+    return [center_row(row) for row in ratings]
